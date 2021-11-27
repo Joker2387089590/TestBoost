@@ -11,7 +11,10 @@ find_package(Boost
 		ALL
 	REQUIRED)
 
-add_executable(TestBoost main.cpp)
+add_executable(TestBoost
+	Udp.h
+	main.cpp
+	Udp.cpp)
 target_link_libraries(TestBoost
 	PRIVATE
 		Boost::boost
