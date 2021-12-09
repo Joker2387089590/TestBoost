@@ -2,20 +2,36 @@ cmake_minimum_required(VERSION 3.18)
 
 project(TestBoost)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FindBoost)
 find_package(Boost
 	COMPONENTS
-		ALL
+		system
 	REQUIRED)
 
-add_executable(TestBoost
+find_package(Threads REQUIRED)
+
+add_library(TestBoost STATIC
 	Udp.h
-	main.cpp
-	Udp.cpp)
+	Udp.cpp
+	main.cpp)
+
 target_link_libraries(TestBoost
-	PRIVATE
+	PUBLIC
 		Boost::boost
-		Boost::system)
+		Boost::system
+		Threads::Threads)
+
+add_executable(Read read.cpp)
+
+target_link_libraries(Read
+	PUBLIC
+		TestBoost)
+
+add_executable(Write write.cpp)
+
+target_link_libraries(Write
+	PUBLIC
+		TestBoost)

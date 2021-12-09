@@ -1,9 +1,7 @@
-#include "Udp.h"
+extern void test();
 
 int main()
 {
-	using namespace boost::asio;
-	io_context io;
-	io.run();
+	test();
 	return 0;
 }
