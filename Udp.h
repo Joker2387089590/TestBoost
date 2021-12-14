@@ -26,7 +26,7 @@ inline std::vector<char> makeData(std::string_view buffer)
 
 inline std::string_view toView(const std::vector<char>& buffer)
 {
-	return std::string_view(buffer.begin(), buffer.end());
+    return std::string_view(buffer.data(), buffer.size());
 }
 
 using boost::asio::ip::udp;

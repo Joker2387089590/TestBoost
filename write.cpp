@@ -6,7 +6,7 @@ using namespace std::literals;
 using boost::system::error_code;
 using boost::asio::ip::address_v4;
 
-const udp::endpoint readEndpoint{address_v4::loopback(), 52121};
+const udp::endpoint readEndpoint{address_v4::any(), 52121};
 
 void test()
 {
