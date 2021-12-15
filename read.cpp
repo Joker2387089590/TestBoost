@@ -6,10 +6,9 @@ using namespace std::literals;
 using boost::system::error_code;
 using boost::asio::ip::address_v4;
 
-const udp::endpoint readEndpoint{address_v4::any(), 50000};
-
 int main()
 {
+	const udp::endpoint readEndpoint{address_v4::any(), 50000};
 	std::cout << readEndpoint.address().to_v4().to_string() << std::endl;
 
 	Manager manager;
@@ -37,4 +36,5 @@ int main()
 		return true;
 	});
 	waiter.get_future().get();
+	return 0;
 }

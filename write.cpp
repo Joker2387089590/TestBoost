@@ -8,8 +8,6 @@ using boost::asio::ip::address_v4;
 
 constexpr int port = 50000;
 
-const udp::endpoint readEndpoint{address_v4::from_string("192.168.1.243"), 52121 };
-
 int main(int argc, char* argv[])
 {
 	Manager manager;
