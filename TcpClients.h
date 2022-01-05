@@ -1,23 +1,9 @@
 #pragma once
-#include <thread>
 #include <iostream>
-#include <boost/asio.hpp>
 #include <IntWrapper.h>
+#include <Common.h>
 
-namespace Tcp
-{
-	class ManagerBase
-	{
-	public:
-		explicit ManagerBase();
-		virtual ~ManagerBase();
-	protected:
-		boost::asio::io_context m_context;
-		std::thread m_ioThread;
-	};
-}
-
-namespace Tcp::Client
+namespace Net::Tcp::Client
 {
 	using boost::asio::ip::tcp;
 

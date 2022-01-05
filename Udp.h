@@ -1,34 +1,8 @@
 #pragma once
-#include <boost/asio.hpp>
+#include <Common.h>
 
-namespace Udp
+namespace Net::Udp
 {
-
-class Manager
-{
-public:
-	explicit Manager();
-	virtual ~Manager();
-	auto& context() { return m_context; }
-
-protected:
-	virtual void ioErrorOccured(const boost::system::error_code& error);
-
-private:
-	boost::asio::io_context m_context;
-	std::thread m_ioThread;
-};
-
-inline std::vector<char> makeData(std::string_view buffer)
-{
-	return std::vector<char>(buffer.begin(), buffer.end());
-}
-
-inline std::string_view toView(const std::vector<char>& buffer)
-{
-    return std::string_view(buffer.data(), buffer.size());
-}
-
 using boost::asio::ip::udp;
 
 struct Datagram : std::pair<udp::endpoint, std::vector<char>>
@@ -53,22 +27,23 @@ struct Datagram : std::pair<udp::endpoint, std::vector<char>>
 	}
 };
 
-class Node : public std::enable_shared_from_this<Node>
+class Node :
+    public std::enable_shared_from_this<Node>,
+    protected udp::socket
 {
 public:
 	using Ptr = std::shared_ptr<Node>;
-	[[nodiscard]] static Ptr make(Manager& manager);
-	// [[nodiscard]] static Ptr open(Manager& manager, udp::endpoint e = {});
-
-protected:
-	Node(boost::asio::io_context& context);
 
 public:
-	bool bind(const udp::endpoint& endpoint);
-	auto endpoint() const { return m_socket.local_endpoint(); }
+    [[nodiscard]] static Ptr make(Manager& manager);
+    virtual ~Node() = default;
+protected:
+    Node(boost::asio::io_context& context);
 
-	auto& socket() const { return m_socket; }
-	auto& socket() { return m_socket; }
+public:
+    using udp::socket::open;
+    using udp::socket::bind;
+    auto endpoint() const { return local_endpoint(); }
 
 public:
 	using AfterReceive = bool(Datagram& datagram);
@@ -84,9 +59,6 @@ public:
 	void startWrite(std::shared_ptr<Datagram> datagram,
 					std::function<AfterWrite> afterWrite = {},
 					std::function<ErrorWrite> errorWrite = {});
-
-private:
-	udp::socket m_socket;
 };
 
 }
